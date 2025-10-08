@@ -1,38 +1,25 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class Detector : MonoBehaviour
+namespace Assets.Scripts.Enemy
 {
-    [SerializeField] private LayerMask _layerMask;
-    [SerializeField] private float _detectionRadius = 1f;
-    [SerializeField] private float _delay = 1f;
-
-    public event UnityAction<Character> Detected;
-
-    public void StartDetection()
+    [RequireComponent(typeof(Collider2D))]
+    public class Detector : MonoBehaviour
     {
-        StartCoroutine(DetectionLoop());
-    }
+        public event UnityAction<Character> OnRadius;
+        public event UnityAction OutOfRadius;
 
-    private IEnumerator DetectionLoop()
-    {
-        WaitForSeconds wait = new(_delay);
-
-        Collider2D hit;
-
-        while (enabled)
+        private void OnTriggerEnter2D(Collider2D collision)
         {
-            hit = Physics2D.OverlapCircle(transform.position, _detectionRadius, _layerMask);
+            if (collision.TryGetComponent<Character>(out Character character))
+                OnRadius?.Invoke(character);
+        }
 
-            if (hit != null && hit.TryGetComponent(out Character character))
-            {
-                Detected?.Invoke(character);
-
-                yield break;
-            }
-
-            yield return wait;
+        private void OnTriggerExit2D(Collider2D collision)
+        {
+            if (collision.TryGetComponent<Character>(out Character character))
+                OutOfRadius?.Invoke();
         }
     }
 }
