@@ -1,15 +1,18 @@
-using UnityEngine;
+﻿using UnityEngine;
 
-public class WayHendel : MonoBehaviour
+namespace Assets.Scripts.Enemy
 {
-    [SerializeField] private Transform[] _waypoints;
-
-    private int _currentIndex = 0;
-
-    public Vector2 GetPosition()
+    public class WayHendel : MonoBehaviour
     {
-        _currentIndex = ++_currentIndex % _waypoints.Length;
+        [SerializeField] private Transform[] _waypoints;
 
-        return _waypoints[_currentIndex].position;
+        private int _currentIndex = 0;
+
+        public Vector2 GetNextPosition()
+        {
+            _currentIndex = ++_currentIndex % _waypoints.Length;
+
+            return _waypoints[_currentIndex].position;
+        }
     }
 }
