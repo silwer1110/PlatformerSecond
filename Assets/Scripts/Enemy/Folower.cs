@@ -1,34 +1,26 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Enemy
 {
-    public class Folower : MonoBehaviour
+    public class Folower : IMover
     {
-        [SerializeField] private Mover _mover;
-        [SerializeField] private float _folowingSpeed = 2f;
-        [SerializeField] private float _distanceToTarget = 0.5f;
+        private Transform _target;
+        private Transform _transform;
+        private float _speed = 2f;
+        private float _distanceToTarget = 0.5f;
 
-        private Coroutine _coroutine;
-
-        public void StartFolow(Transform target)
+        public Folower(Transform target, Transform transform, float speed, float distanceToTarget)
         {
-            _coroutine = StartCoroutine(FolowTarget(target));
+            _target = target;
+            _transform = transform;
+            _speed = speed;
+            _distanceToTarget = distanceToTarget;
         }
 
-        public void StopFolow()
+        public void Move()
         {
-            StopCoroutine(_coroutine);
-        }
-
-        public IEnumerator FolowTarget(Transform tareget)
-        {
-            while ((transform.position - tareget.position).sqrMagnitude > _distanceToTarget)
-            {
-                transform.position = Vector3.MoveTowards(transform.position, tareget.position, _folowingSpeed * Time.deltaTime);
-
-                yield return null;
-            }
+            if ((_transform.position - _target.position).sqrMagnitude > _distanceToTarget)
+                _transform.position = Vector3.MoveTowards(_transform.position, _target.position, _speed * Time.deltaTime);
         }
     }
 }
