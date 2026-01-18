@@ -1,35 +1,30 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets.Scripts.Enemy
 {
-    public class Patruler : MonoBehaviour
+    public class Patruler : IMover
     {
-        [SerializeField] private Mover _mover;
-        [SerializeField] private WayHendel _wayHendel;
+        private Transform _transform;
+        private WayHendel _wayHendel;
+        private Vector3 _target;
+        private float _speed = 5f;
+        private float _distanceBetweenPoints = 0.2f;
 
-        private Coroutine _coroutine;
-
-        public void StartPatruling()
+        public Patruler(WayHendel wayHendel, float speed, float distanceBetweenPoints, Transform transform)
         {
-            _coroutine = StartCoroutine(MoveLoop());
+            _wayHendel = wayHendel;
+            _speed = speed;
+            _distanceBetweenPoints = distanceBetweenPoints;
+            _transform = transform;
+            _target = _wayHendel.GetNextPosition();
         }
 
-        public void StopPatruling() 
+        public void Move()
         {
-            StopCoroutine(_coroutine);
-        }
-
-        private IEnumerator MoveLoop()
-        {
-            Vector2 position = _wayHendel.GetNextPosition();
-
-            while (enabled)
-            {
-                yield return _mover.MoveToTarget(position);
-
-                position = _wayHendel.GetNextPosition();
-            }
+            if ((_transform.position - _target).sqrMagnitude > _distanceBetweenPoints)
+                _transform.position = Vector2.MoveTowards(_transform.position, _target, _speed * Time.deltaTime);
+            else
+                _target = _wayHendel.GetNextPosition();
         }
     }
 }
