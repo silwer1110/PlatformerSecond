@@ -2,13 +2,13 @@
 
 namespace Assets.Scripts.Enemy
 {
-    public class Patruler : IMover
+    public class Patruler
     {
         private Transform _transform;
         private WayHendel _wayHendel;
         private Vector3 _target;
-        private float _speed = 5f;
-        private float _distanceBetweenPoints = 0.2f;
+        private float _speed;
+        private float _distanceBetweenPoints;
 
         public Patruler(WayHendel wayHendel, float speed, float distanceBetweenPoints, Transform transform)
         {
@@ -19,7 +19,7 @@ namespace Assets.Scripts.Enemy
             _target = _wayHendel.GetNextPosition();
         }
 
-        public void Move()
+        public void Patrule()
         {
             if ((_transform.position - _target).sqrMagnitude > _distanceBetweenPoints)
                 _transform.position = Vector2.MoveTowards(_transform.position, _target, _speed * Time.deltaTime);

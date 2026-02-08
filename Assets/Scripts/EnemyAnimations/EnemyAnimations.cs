@@ -4,8 +4,8 @@ public class EnemyAnimations : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
 
-    public void AnimateAttack(float distanceToTarget)
-    {
-        _animator.SetFloat(AnimatorData.Params.DistanceToTarget, distanceToTarget);
+    public void Attack(bool canAtack)
+    {       
+        _animator.SetBool(AnimatorData.Params.isAtacking, canAtack);
     }
 }

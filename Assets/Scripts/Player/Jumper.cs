@@ -6,6 +6,7 @@ public class Jumper : MonoBehaviour
     [SerializeField] private LayerMask _layerMask;
     [SerializeField] private Rigidbody2D _rigidbody;
     [SerializeField] private float _jumpForce;
+    [SerializeField] private float _groundCheckDistance = 2f;
 
     public void Jump(bool jumpPressed)
     {
@@ -15,8 +16,6 @@ public class Jumper : MonoBehaviour
 
     private bool IsGrounded()
     {
-        float groundCheckDistance = 1.5f;
-
-        return Physics2D.Raycast(transform.position, Vector2.down, groundCheckDistance, _layerMask);
+      return Physics2D.Raycast(transform.position, Vector2.down, _groundCheckDistance, _layerMask);
     }
 }
