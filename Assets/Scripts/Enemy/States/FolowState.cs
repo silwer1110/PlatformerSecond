@@ -1,18 +1,19 @@
 ﻿using Assets.Scripts.Infrastrukture;
+using Assets.Scripts.Enemy.Capabilities;
 
 namespace Assets.Scripts.Enemy.States
 {
     public class FolowState : State
     {
         private Folower _folower;
-        private FlyingEye _flyingEye;
+        EnemyDetector _detector;
 
-        public FolowState(IStateChanger stateChanger,FlyingEye flyingEye, Folower folower) : base(stateChanger)
+        public FolowState(IStateChanger stateChanger, Folower folower) : base(stateChanger)
         {
-            _flyingEye = flyingEye;
             _folower = folower;
+            _detector = new(folower.transform, folower.FolowRadius);
         }
 
-        protected override void OnUpdate() => _folower.Folow(_flyingEye.Detector.GetPlayerPosition());
+        protected override void OnUpdate() => _folower.Folow(_detector.GetPlayerOnRadius(_folower.FolowRadius).transform);
     }
 }

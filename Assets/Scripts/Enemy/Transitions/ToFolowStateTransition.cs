@@ -1,17 +1,22 @@
 ﻿using Assets.Scripts.Infrastrukture;
 using Assets.Scripts.Enemy.States;
+using Assets.Scripts.Enemy.Capabilities;
+using UnityEngine;
 
 namespace Assets.Scripts.Enemy.Transitions
 {
     internal class ToFolowStateTransition : Transition
     {
-        FlyingEye _flyingEye;
+        private EnemyDetector _detector;
+        private float _attackRadius;
 
-        public ToFolowStateTransition(FolowState nextState, FlyingEye flyingEye) : base(nextState)
+        public ToFolowStateTransition(FolowState nextState, Transform transform, float folowingRadius, float attackRadius) : base(nextState)
         {
-           _flyingEye = flyingEye;
+            _detector = new(transform, folowingRadius);
+            _attackRadius = attackRadius;
         }
 
-        protected override bool CanTransit() => _flyingEye.Detector.DetectPlayer();
+        protected override bool CanTransit() => _detector.DetectPlayer() && 
+            _detector.GetPlayerOnRadius(_attackRadius) == null;
     }
 }

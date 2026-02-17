@@ -1,17 +1,19 @@
 ﻿using Assets.Scripts.Infrastrukture;
 using Assets.Scripts.Enemy.States;
+using Assets.Scripts.Enemy.Capabilities;
+using UnityEngine;
 
 namespace Assets.Scripts.Enemy.Transitions
 {
     internal class ToCombatStateTransition : Transition
     {
-        private Combat _combat;  
+        private EnemyDetector _detector;
 
-        public ToCombatStateTransition(CombatState nextState, Combat combat) : base(nextState)
+        public ToCombatStateTransition(CombatState nextState, Transform transform ,float atackRadius) : base(nextState)
         {
-            _combat = combat;
+            _detector = new(transform, atackRadius);
         }
 
-        protected override bool CanTransit() => _combat.GetTargetOnAtackRadius() != null;
+        protected override bool CanTransit() => _detector.DetectPlayer();
     }
 }

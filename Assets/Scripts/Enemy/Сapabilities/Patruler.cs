@@ -1,28 +1,27 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.Enemy
+namespace Assets.Scripts.Enemy.Capabilities
 {
-    public class Patruler
+    public class Patruler : MonoBehaviour
     {
-        private Transform _transform;
-        private WayHendel _wayHendel;
-        private Vector3 _target;
-        private float _speed;
-        private float _distanceBetweenPoints;
+        [SerializeField] private WayHendel _wayHendel;
+        [SerializeField] private EnemyAnimations _animations;
+        [SerializeField] private float _speed = 2f;
+        [SerializeField] private float _distanceBetweenPoints = 0.01f;
 
-        public Patruler(WayHendel wayHendel, float speed, float distanceBetweenPoints, Transform transform)
+        private Vector3 _target;
+
+        private void Awake()
         {
-            _wayHendel = wayHendel;
-            _speed = speed;
-            _distanceBetweenPoints = distanceBetweenPoints;
-            _transform = transform;
             _target = _wayHendel.GetNextPosition();
         }
 
         public void Patrule()
         {
-            if ((_transform.position - _target).sqrMagnitude > _distanceBetweenPoints)
-                _transform.position = Vector2.MoveTowards(_transform.position, _target, _speed * Time.deltaTime);
+            _animations.LookAtTarget(_target);
+
+            if ((transform.position - _target).sqrMagnitude > _distanceBetweenPoints)
+                transform.position = Vector2.MoveTowards(transform.position, _target, _speed * Time.deltaTime);
             else
                 _target = _wayHendel.GetNextPosition();
         }

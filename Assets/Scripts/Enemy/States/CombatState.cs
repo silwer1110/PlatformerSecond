@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Infrastrukture;
+using Assets.Scripts.Enemy.Capabilities;
 
 namespace Assets.Scripts.Enemy.States
 {
@@ -11,9 +12,17 @@ namespace Assets.Scripts.Enemy.States
             _combat = combat;
         }
 
-        public override void Enter()
+        protected override void OnUpdate()
         {
-            _combat.Atack(_combat.GetTargetOnAtackRadius());
-        }   
+            if(_combat.IsAttacking)
+                return;
+
+            _combat.StartAttacking();
+        }
+
+        public override void Exit()
+        {
+            _combat.StopAttack();
+        }
     }
 }

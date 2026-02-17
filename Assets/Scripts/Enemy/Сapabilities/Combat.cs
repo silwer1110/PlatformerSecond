@@ -1,29 +1,69 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-namespace Assets.Scripts.Enemy
+namespace Assets.Scripts.Enemy.Capabilities
 {
     public class Combat : MonoBehaviour
     {
         [SerializeField] private EnemyAnimations _animations;
         [SerializeField] private float _damage = 1f;
-        [SerializeField] private float _atackRadius = 1f;  
+        [SerializeField] private float _attackRadius = 1f;
+        [SerializeField] private float _attackCooldown = 1f;
 
-        public void Atack(Character target)
-        { 
-            target.TakeDamage(_damage);
+        private Coroutine _attackCoroutine;
+        private Character _target;
+        private EnemyDetector _detector;
+        private WaitForSeconds _cooldownWait;
+
+        private bool _isAttacking = false;
+
+        public float AttackRadius => _attackRadius;
+        public bool IsAttacking => _isAttacking;
+
+        private void Awake()
+        {
+            _detector = new(transform, _attackRadius);
+            _cooldownWait = new(_attackCooldown);
         }
 
-        public Character GetTargetOnAtackRadius()
+        public void StopAttack()
         {
-            Character target = null;
+            _isAttacking = false;
+            _animations.StopAnimateAttack();
 
-            Collider2D hit = Physics2D.OverlapCircle(transform.position, _atackRadius, LayerMask.GetMask("Player"));
+            if (_attackCoroutine != null)
+                StopCoroutine(_attackCoroutine);
+        }
 
-            if (hit != null && hit.TryGetComponent(out Character character))
-                target = character;
+        public void StartAttacking()
+        {
+            _isAttacking = true;
 
-            return target;
+            _attackCoroutine = StartCoroutine(AttackLoop());
+        }
+
+        public void DealDamage()
+        {
+            _target = _detector.GetPlayerOnRadius(_attackRadius);
+
+            if (_target == null)
+                return;
+
+            _target.HealthView.TakeDamage(_damage);
+        }
+
+        private IEnumerator AttackLoop()
+        {
+            _target = _detector.GetPlayerOnRadius(_attackRadius);
+
+            while (_target != null)
+            {
+                _animations.LookAtTarget(_target.transform.position);
+                _animations.AnimateAttack();
+                yield return _cooldownWait;
+            }
+
+            StopAttack();
         }
     }
 }
