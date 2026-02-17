@@ -1,17 +1,21 @@
 ﻿using Assets.Scripts.Infrastrukture;
 using Assets.Scripts.Enemy.States;
+using Assets.Scripts.Enemy.Capabilities;
+using UnityEngine;
 
 namespace Assets.Scripts.Enemy.Transitions
 {
     internal class ToPatruleStateTransition : Transition
     {
-        private FlyingEye _flyingEye;
+        private EnemyDetector _detector;
 
-        public ToPatruleStateTransition(PatruleState nextState, FlyingEye flyingEye) : base(nextState)
+        private bool _onRadius = true;
+
+        public ToPatruleStateTransition(PatruleState nextState, Transform transform , float radius) : base(nextState)
         {
-            _flyingEye = flyingEye;
+            _detector = new(transform, radius);
         }
 
-        protected override bool CanTransit() => !_flyingEye.Detector.DetectPlayer();
+        protected override bool CanTransit() => _detector.DetectPlayer() != _onRadius;
     }
 }

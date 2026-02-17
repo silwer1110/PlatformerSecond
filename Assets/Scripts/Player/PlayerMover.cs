@@ -1,11 +1,11 @@
 using UnityEngine;
 
-[RequireComponent (typeof(Rigidbody2D), typeof(PlayerAnimator))]
+[RequireComponent (typeof(Rigidbody2D), typeof(CharacterAnimator))]
 public class PlayerMover : MonoBehaviour
 {
     [SerializeField] private float _moveSpeed = 5f;
     [SerializeField] private Rigidbody2D _rigidbody;
-    [SerializeField] private PlayerAnimator _animationHandel;
+    [SerializeField] private CharacterAnimator _animationHandel;
     [SerializeField] private Fliper _fliper;
 
     public void Move(float moveDirection)

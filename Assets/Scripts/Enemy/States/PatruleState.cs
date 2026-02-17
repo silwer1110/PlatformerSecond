@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Infrastrukture;
+using Assets.Scripts.Enemy.Capabilities;    
 
 namespace Assets.Scripts.Enemy.States
 {

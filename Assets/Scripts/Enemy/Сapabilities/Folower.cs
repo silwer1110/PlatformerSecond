@@ -1,24 +1,19 @@
 ﻿using UnityEngine;
 
-namespace Assets.Scripts.Enemy
+namespace Assets.Scripts.Enemy.Capabilities
 {
-    public class Folower 
+    public class Folower : MonoBehaviour
     {
-        private Transform _transform;
-        private float _speed;
-        private float _distanceToTarget;
+        [SerializeField] private float _speed =2.5f;
+        [SerializeField] private float _distanceToTarget = 1f;
+        [SerializeField] private float _folowRadius = 3f;
 
-        public Folower(Transform transform, float speed, float distanceToTarget)
-        {
-            _transform = transform;
-            _speed = speed;
-            _distanceToTarget = distanceToTarget;
-        }
+        public float FolowRadius => _folowRadius;
 
         public void Folow(Transform target)
         {
-            if ((_transform.position - target.position).sqrMagnitude > _distanceToTarget)
-                _transform.position = Vector3.MoveTowards(_transform.position, target.position, _speed * Time.deltaTime);
+            if ((transform.position - target.position).sqrMagnitude > _distanceToTarget)
+                transform.position = Vector3.MoveTowards(transform.position, target.position, _speed * Time.deltaTime);
         }
     }
 }
